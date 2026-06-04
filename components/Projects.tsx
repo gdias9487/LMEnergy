@@ -41,14 +41,14 @@ const projects = [
 
 export function Projects() {
   return (
-    <section id="projetos" className="relative bg-grafite-800/60 py-24 lg:py-32">
+    <section id="projetos" className="relative bg-grafite-800/60 py-20 sm:py-24 lg:py-32">
       <div className="container-pad">
         <motion.div
           variants={stagger}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="flex flex-wrap items-end justify-between gap-6"
+          className="flex flex-wrap items-end justify-between gap-5 sm:gap-6"
         >
           <div className="max-w-2xl">
             <motion.span variants={fadeUp} className="chip">
@@ -57,7 +57,7 @@ export function Projects() {
             </motion.span>
             <motion.h2
               variants={fadeUp}
-              className="mt-5 font-display text-4xl font-bold tracking-tight text-gelo sm:text-5xl"
+              className="mt-5 font-display text-3xl font-bold tracking-tight text-gelo sm:text-4xl lg:text-5xl"
             >
               Clientes que já estão{" "}
               <span className="text-sustentavel">economizando</span> com{" "}
@@ -79,7 +79,7 @@ export function Projects() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2"
+          className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 sm:gap-6 md:grid-cols-2"
         >
           {projects.map((p, i) => (
             <motion.article
@@ -90,7 +90,7 @@ export function Projects() {
               className="group relative overflow-hidden rounded-3xl border border-gelo/10 bg-petroleo p-1 shadow-card"
             >
               <div
-                className={`relative h-56 overflow-hidden rounded-2xl bg-gradient-to-br ${p.color}`}
+                className={`relative h-44 overflow-hidden rounded-2xl bg-gradient-to-br sm:h-56 ${p.color}`}
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(244,178,35,0.15),transparent_55%)]" />
                 <div className="absolute inset-0 bg-hero-grid bg-grid opacity-30 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
@@ -108,24 +108,24 @@ export function Projects() {
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 p-6">
-                <div>
-                  <h3 className="font-display text-2xl font-semibold text-gelo">
+              <div className="flex items-end justify-between gap-3 p-5 sm:gap-4 sm:p-6">
+                <div className="min-w-0">
+                  <h3 className="font-display text-xl font-semibold text-gelo sm:text-2xl">
                     {p.title}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-aco-400">
                     {p.desc}
                   </p>
                   <p
-                    className={`mt-4 text-sm font-semibold ${
+                    className={`mt-3 text-sm font-semibold sm:mt-4 ${
                       p.accent === "energia" ? "text-energia" : "text-sustentavel"
                     }`}
                   >
                     {p.metric}
                   </p>
                 </div>
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gelo/15 bg-grafite/60 text-gelo transition group-hover:-translate-y-1 group-hover:bg-energia group-hover:text-petroleo">
-                  <ArrowUpRight className="h-5 w-5" />
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-gelo/15 bg-grafite/60 text-gelo transition group-hover:-translate-y-1 group-hover:bg-energia group-hover:text-petroleo sm:h-11 sm:w-11">
+                  <ArrowUpRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </span>
               </div>
             </motion.article>

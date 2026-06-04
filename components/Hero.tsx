@@ -11,11 +11,11 @@ export function Hero() {
   const { openModal } = useQuoteModal();
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-32 lg:pt-36">
+    <section id="hero" className="relative overflow-hidden pt-28 sm:pt-32 lg:pt-36">
       {/* Padrão de grid decorativo */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-hero-grid bg-grid opacity-[0.35] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
 
-      <div className="container-pad grid items-center gap-14 pb-20 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pb-28">
+      <div className="container-pad grid items-center gap-10 pb-16 sm:gap-14 sm:pb-20 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pb-28">
         <motion.div
           variants={stagger}
           initial="hidden"
@@ -32,7 +32,7 @@ export function Hero() {
 
           <motion.h1
             variants={fadeUp}
-            className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight text-gelo sm:text-6xl lg:text-7xl"
+            className="mt-6 font-display text-[2.5rem] font-bold leading-[1.05] tracking-tight text-gelo sm:text-6xl lg:text-7xl"
           >
             Reduza sua conta
             <br />
@@ -54,7 +54,7 @@ export function Hero() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-aco-400"
+            className="mt-6 max-w-xl text-base leading-relaxed text-aco-400 sm:mt-8 sm:text-lg"
           >
             Sou <span className="text-gelo">Leonardo Mendes</span>, especialista
             em energia solar e soluções inteligentes para redução da conta de
@@ -65,12 +65,12 @@ export function Hero() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
           >
             <button
               type="button"
               onClick={openModal}
-              className="btn-primary group"
+              className="btn-primary group w-full sm:w-auto"
             >
               Solicitar orçamento grátis
               <span className="grid h-6 w-6 place-items-center rounded-full bg-petroleo/15 transition group-hover:translate-x-0.5">
@@ -81,7 +81,7 @@ export function Hero() {
               href={buildWhatsAppUrl()}
               target="_blank"
               rel="noreferrer"
-              className="btn-secondary"
+              className="btn-secondary w-full sm:w-auto"
             >
               <MessageCircle className="h-4 w-4 text-sustentavel" />
               Falar no WhatsApp
@@ -90,7 +90,7 @@ export function Hero() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-12 flex items-center gap-5"
+            className="mt-10 flex items-center gap-4 sm:mt-12 sm:gap-5"
           >
             <div className="flex -space-x-3">
               {[
@@ -100,20 +100,20 @@ export function Hero() {
               ].map((g, i) => (
                 <div
                   key={i}
-                  className={`grid h-11 w-11 place-items-center rounded-full border-2 border-petroleo bg-gradient-to-br ${g} font-display text-sm font-semibold text-petroleo`}
+                  className={`grid h-10 w-10 place-items-center rounded-full border-2 border-petroleo bg-gradient-to-br ${g} font-display text-xs font-semibold text-petroleo sm:h-11 sm:w-11 sm:text-sm`}
                 >
                   {["AC", "MR", "JS"][i]}
                 </div>
               ))}
-              <div className="grid h-11 w-11 place-items-center rounded-full border-2 border-petroleo bg-grafite text-xs font-semibold text-aco-400">
+              <div className="grid h-10 w-10 place-items-center rounded-full border-2 border-petroleo bg-grafite text-[11px] font-semibold text-aco-400 sm:h-11 sm:w-11 sm:text-xs">
                 +50
               </div>
             </div>
             <div>
-              <p className="font-display text-2xl font-semibold text-gelo">
+              <p className="font-display text-xl font-semibold text-gelo sm:text-2xl">
                 50<span className="text-energia">+</span>
               </p>
-              <p className="text-xs uppercase tracking-wider text-aco-500">
+              <p className="text-[11px] uppercase tracking-wider text-aco-500 sm:text-xs">
                 Clientes economizando
               </p>
             </div>
@@ -138,8 +138,8 @@ export function Hero() {
         transition={{ duration: 0.6 }}
         className="border-y border-gelo/5 bg-grafite/20 backdrop-blur"
       >
-        <div className="container-pad flex flex-wrap items-center justify-between gap-x-10 gap-y-4 py-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-aco-500">
+        <div className="container-pad flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-5 sm:justify-between sm:gap-x-10 sm:gap-y-4 sm:py-6">
+          <p className="w-full text-center text-[11px] uppercase tracking-[0.3em] text-aco-500 sm:w-auto sm:text-left sm:text-xs">
             Atendemos
           </p>
           {[
@@ -152,7 +152,7 @@ export function Hero() {
           ].map((segment) => (
             <span
               key={segment}
-              className="font-display text-base font-medium text-aco-400 transition hover:text-gelo"
+              className="font-display text-sm font-medium text-aco-400 transition hover:text-gelo sm:text-base"
             >
               {segment}
             </span>

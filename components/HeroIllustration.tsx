@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
  */
 export function HeroIllustration() {
   return (
-    <div className="relative aspect-square w-full max-w-[560px]">
+    <div className="relative mx-auto aspect-square w-full max-w-[420px] sm:max-w-[480px] lg:max-w-[560px]">
       {/* Halo de luz atrás da composição */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-1/3 h-[70%] w-[70%] -translate-x-1/2 rounded-full bg-energia/20 blur-3xl" />
@@ -162,11 +162,11 @@ export function HeroIllustration() {
         initial={{ opacity: 0, y: 12, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ delay: 1.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute -left-2 top-12 rounded-2xl border border-gelo/10 bg-grafite/80 px-4 py-3 shadow-card backdrop-blur-md"
+        className="absolute left-0 top-6 rounded-2xl border border-gelo/10 bg-grafite/80 px-3 py-2 shadow-card backdrop-blur-md sm:-left-2 sm:top-12 sm:px-4 sm:py-3"
       >
-        <div className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-sustentavel/15 text-sustentavel">
-            <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-sustentavel/15 text-sustentavel sm:h-9 sm:w-9">
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 sm:h-5 sm:w-5">
               <path
                 d="M3 17l6-6 4 4 8-8"
                 stroke="currentColor"
@@ -177,8 +177,8 @@ export function HeroIllustration() {
             </svg>
           </span>
           <div>
-            <p className="text-xs text-aco-400">Eficiência média</p>
-            <p className="font-display text-lg font-semibold text-gelo">
+            <p className="text-[10px] text-aco-400 sm:text-xs">Eficiência média</p>
+            <p className="font-display text-sm font-semibold text-gelo sm:text-lg">
               +38% <span className="text-sustentavel">↑</span>
             </p>
           </div>
@@ -190,17 +190,17 @@ export function HeroIllustration() {
         initial={{ opacity: 0, y: 12, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ delay: 1.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute -right-2 bottom-16 rounded-2xl border border-gelo/10 bg-grafite/80 px-4 py-3 shadow-card backdrop-blur-md"
+        className="absolute bottom-10 right-0 rounded-2xl border border-gelo/10 bg-grafite/80 px-3 py-2 shadow-card backdrop-blur-md sm:-right-2 sm:bottom-16 sm:px-4 sm:py-3"
       >
-        <div className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-energia/15 text-energia">
-            <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-energia/15 text-energia sm:h-9 sm:w-9">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 sm:h-5 sm:w-5">
               <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" />
             </svg>
           </span>
           <div>
-            <p className="text-xs text-aco-400">Carbono neutro</p>
-            <p className="font-display text-lg font-semibold text-gelo">
+            <p className="text-[10px] text-aco-400 sm:text-xs">Carbono neutro</p>
+            <p className="font-display text-sm font-semibold text-gelo sm:text-lg">
               100% limpo
             </p>
           </div>

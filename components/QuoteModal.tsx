@@ -211,22 +211,22 @@ export function QuoteModal({ open, onClose }: Props) {
             <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-sustentavel/15 blur-3xl" />
 
             {/* Header */}
-            <div className="relative flex items-start justify-between gap-4 border-b border-gelo/10 bg-petroleo-700/60 px-6 py-5 backdrop-blur sm:px-8">
-              <div>
+            <div className="relative flex items-start justify-between gap-3 border-b border-gelo/10 bg-petroleo-700/60 px-5 py-4 backdrop-blur sm:gap-4 sm:px-8 sm:py-5">
+              <div className="min-w-0">
                 <span className="chip mb-2">
                   <Sun className="h-3.5 w-3.5 text-energia" />
                   Orçamento gratuito em 24h
                 </span>
                 <h2
                   id="quote-modal-title"
-                  className="font-display text-2xl font-bold leading-tight text-gelo sm:text-3xl"
+                  className="font-display text-xl font-bold leading-tight text-gelo sm:text-3xl"
                 >
                   Vamos calcular sua{" "}
                   <span className="bg-gradient-to-r from-energia to-sustentavel bg-clip-text text-transparent">
                     economia
                   </span>
                 </h2>
-                <p className="mt-1 text-sm text-aco-400">
+                <p className="mt-1 text-xs text-aco-400 sm:text-sm">
                   Conte sobre sua conta de luz e respondemos em até 24h.
                 </p>
               </div>
@@ -240,7 +240,7 @@ export function QuoteModal({ open, onClose }: Props) {
             </div>
 
             {/* Conteúdo scrollável */}
-            <div className="relative max-h-[calc(92vh-180px)] overflow-y-auto px-6 py-6 sm:px-8 sm:py-7">
+            <div className="relative max-h-[calc(92vh-160px)] overflow-y-auto px-5 py-5 sm:max-h-[calc(92vh-180px)] sm:px-8 sm:py-7">
               {enviado ? (
                 <SuccessState onClose={onClose} />
               ) : (
@@ -443,7 +443,7 @@ export function QuoteModal({ open, onClose }: Props) {
                       O que você procura?
                     </Legend>
 
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       {[
                         "Desconto na tarifa (sem investimento)",
                         "Instalação de sistema fotovoltaico",

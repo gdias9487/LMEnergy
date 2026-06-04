@@ -36,7 +36,7 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="container-pad flex h-20 items-center justify-between">
+      <nav className="container-pad flex h-16 items-center justify-between sm:h-20">
         <a
           href="#hero"
           className="flex items-center gap-2.5 text-gelo"
@@ -75,7 +75,7 @@ export function Navbar() {
 
         <button
           onClick={() => setOpen((v) => !v)}
-          className="grid h-11 w-11 place-items-center rounded-xl border border-gelo/10 bg-grafite/40 text-gelo lg:hidden"
+          className="grid h-10 w-10 place-items-center rounded-xl border border-gelo/10 bg-grafite/40 text-gelo sm:h-11 sm:w-11 lg:hidden"
           aria-label="Abrir menu"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

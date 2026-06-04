@@ -54,31 +54,31 @@ function Counter({
 
 export function Stats() {
   return (
-    <section className="relative -mt-16 px-6 lg:-mt-20">
+    <section className="relative -mt-12 sm:-mt-16 lg:-mt-20">
       <div className="container-pad">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-gelo/10 bg-gelo/10 shadow-card lg:grid-cols-4"
+          className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-gelo/10 bg-gelo/10 shadow-card sm:rounded-3xl lg:grid-cols-4"
         >
           {items.map((it, i) => (
             <div
               key={i}
-              className="flex flex-col items-start gap-2 bg-grafite/80 p-7 backdrop-blur-xl"
+              className="flex flex-col items-start gap-1.5 bg-grafite/80 p-4 backdrop-blur-xl sm:gap-2 sm:p-6 lg:p-7"
             >
-              <p className="flex items-baseline gap-1.5 whitespace-nowrap font-display font-bold leading-tight text-gelo">
-                <span className="text-3xl sm:text-4xl">
+              <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0 font-display font-bold leading-tight text-gelo">
+                <span className="text-2xl sm:text-3xl lg:text-4xl">
                   <Counter to={it.value} suffix={it.suffix} />
                 </span>
                 {it.unit && (
-                  <span className="text-sm font-medium text-aco-400 sm:text-base">
+                  <span className="text-xs font-medium text-aco-400 sm:text-sm lg:text-base">
                     {it.unit}
                   </span>
                 )}
               </p>
-              <p className="text-xs uppercase tracking-[0.18em] text-aco-500">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-aco-500 sm:text-xs sm:tracking-[0.18em]">
                 {it.label}
               </p>
             </div>

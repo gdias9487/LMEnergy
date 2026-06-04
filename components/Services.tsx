@@ -52,7 +52,7 @@ const services = [
 
 export function Services() {
   return (
-    <section id="servicos" className="relative py-24 lg:py-32">
+    <section id="servicos" className="relative py-20 sm:py-24 lg:py-32">
       <div className="container-pad">
         <motion.div
           variants={stagger}
@@ -67,14 +67,14 @@ export function Services() {
           </motion.span>
           <motion.h2
             variants={fadeUp}
-            className="mt-5 font-display text-4xl font-bold tracking-tight text-gelo sm:text-5xl"
+            className="mt-5 font-display text-3xl font-bold tracking-tight text-gelo sm:text-4xl lg:text-5xl"
           >
             Tudo que sua casa ou empresa precisa para{" "}
             <span className="text-energia">economizar com sol</span>.
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="mt-5 text-base leading-relaxed text-aco-400"
+            className="mt-4 text-sm leading-relaxed text-aco-400 sm:mt-5 sm:text-base"
           >
             Do desconto imediato na conta de luz à instalação completa de
             energia solar — soluções sob medida, com garantia e suporte
@@ -87,7 +87,7 @@ export function Services() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
-          className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-12 grid grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3"
         >
           {services.map((s) => {
             const Icon = s.icon;

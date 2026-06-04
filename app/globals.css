@@ -5,10 +5,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-petroleo text-gelo font-sans antialiased;
+    @apply overflow-x-hidden bg-petroleo text-gelo font-sans antialiased;
     background-image:
       radial-gradient(60% 40% at 80% -10%, rgba(244, 178, 35, 0.12), transparent 60%),
       radial-gradient(50% 35% at 0% 20%, rgba(43, 182, 115, 0.10), transparent 60%);
@@ -23,7 +24,13 @@
 
 @layer components {
   .container-pad {
-    @apply mx-auto w-full max-w-7xl px-6 lg:px-10;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    /* Garante que botões com texto longo não estourem em mobile */
+    @apply max-w-full;
   }
 
   .btn-primary {
@@ -39,7 +46,17 @@
   }
 
   .card {
-    @apply rounded-2xl border border-gelo/10 bg-grafite/40 p-6 shadow-card backdrop-blur transition;
+    @apply rounded-2xl border border-gelo/10 bg-grafite/40 p-5 shadow-card backdrop-blur transition sm:p-6;
+  }
+}
+
+/* Evita auto-zoom do iOS ao focar campos de formulário em mobile.
+   iOS faz zoom automaticamente quando o input tem font-size < 16px. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }
 
