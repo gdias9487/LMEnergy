@@ -1,0 +1,179 @@
+# =============================================================
+# Dependências
+# =============================================================
+node_modules/
+.pnp/
+.pnp.js
+.pnp.cjs
+.pnp.loader.mjs
+jspm_packages/
+bower_components/
+
+# =============================================================
+# Lockfiles de gerenciadores não usados (mantenha só o seu)
+# =============================================================
+# yarn.lock
+# pnpm-lock.yaml
+# bun.lockb
+
+# =============================================================
+# Build / output
+# =============================================================
+.next/
+out/
+build/
+dist/
+.turbo/
+.vercel/
+.netlify/
+.serverless/
+.cache/
+.parcel-cache/
+.docusaurus/
+.svelte-kit/
+.nuxt/
+.output/
+
+# =============================================================
+# Testes / cobertura
+# =============================================================
+coverage/
+.nyc_output/
+*.lcov
+test-results/
+playwright-report/
+playwright/.cache/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+.cypress-cache/
+
+# =============================================================
+# TypeScript
+# =============================================================
+*.tsbuildinfo
+next-env.d.ts
+
+# =============================================================
+# Variáveis de ambiente (NUNCA commitar segredos)
+# =============================================================
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+# Exceções: mantenha apenas o template versionado
+!.env.example
+!.env.local.example
+
+# =============================================================
+# Logs / debug
+# =============================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# =============================================================
+# Cache / temporários do Node
+# =============================================================
+.npm
+.eslintcache
+.stylelintcache
+.node_repl_history
+.yarn-integrity
+*.tgz
+
+# =============================================================
+# Yarn (Berry / PnP)
+# =============================================================
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn/install-state
+
+# =============================================================
+# Tailwind / PostCSS
+# =============================================================
+.postcssrc.cache
+
+# =============================================================
+# Editores / IDEs
+# =============================================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+.ionide/
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+.cursor/
+.fleet/
+.zed/
+
+# Vim / Emacs / Sublime
+*.swp
+*.swo
+*.swn
+*~
+.*.sw[a-z]
+*.sublime-project
+*.sublime-workspace
+
+# =============================================================
+# Sistemas operacionais
+# =============================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================
+# Segurança / certificados
+# =============================================================
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+secrets/
+
+# =============================================================
+# Misc
+# =============================================================
+*.bak
+*.tmp
+*.temp
+*.orig
+.DS_Store?
