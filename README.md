@@ -1,6 +1,6 @@
 # LM Energy — Leonardo Mendes
 
-Site institucional/portfólio de **Leonardo Mendes**, especialista em energia solar.
+Site portfólio de **Leonardo Mendes**, especialista em energia solar.
 Divulga os serviços oferecidos: desconto na conta de luz, projeto e instalação
 de sistemas fotovoltaicos residenciais e comerciais, montagem, manutenção e
 consultoria.
