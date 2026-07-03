@@ -1,14 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, Calculator, MessageCircle } from "lucide-react";
 import { buildWhatsAppUrl } from "@/lib/contact";
 import { fadeUp, stagger } from "@/lib/motion";
 import { HeroIllustration } from "./HeroIllustration";
 import { useQuoteModal } from "./QuoteModalProvider";
+import { useSavingsCalculator } from "./SavingsCalculatorProvider";
 
 export function Hero() {
   const { openModal } = useQuoteModal();
+  const { openCalculator } = useSavingsCalculator();
 
   return (
     <section id="hero" className="relative overflow-hidden pt-28 sm:pt-32 lg:pt-36">
@@ -56,36 +58,46 @@ export function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-xl text-base leading-relaxed text-aco-400 sm:mt-8 sm:text-lg"
           >
-            Sou <span className="text-gelo">Leonardo Mendes</span>, especialista
-            em energia solar e soluções inteligentes para redução da conta de
-            luz. Ofereço descontos na tarifa de energia sem necessidade de
-            investimento, além de projetos, instalação e manutenção de sistemas
-            fotovoltaicos para residências e empresas.
+            A <span className="text-gelo">LM Energy</span> é especialista em
+            energia solar e soluções para reduzir a conta de luz em
+            Pernambuco. Oferecemos desconto na tarifa sem investimento inicial,
+            além de projeto, instalação e manutenção de sistemas fotovoltaicos
+            para residências e empresas.
           </motion.p>
 
           <motion.div
             variants={fadeUp}
-            className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
+            className="mt-8 flex flex-col gap-3 sm:mt-10"
           >
             <button
               type="button"
               onClick={openModal}
-              className="btn-primary group w-full sm:w-auto"
+              className="btn-primary group w-full sm:w-auto sm:self-start"
             >
               Solicitar orçamento grátis
               <span className="grid h-6 w-6 place-items-center rounded-full bg-petroleo/15 transition group-hover:translate-x-0.5">
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
             </button>
-            <a
-              href={buildWhatsAppUrl()}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-secondary w-full sm:w-auto"
-            >
-              <MessageCircle className="h-4 w-4 text-sustentavel" />
-              Falar no WhatsApp
-            </a>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:max-w-md">
+              <button
+                type="button"
+                onClick={openCalculator}
+                className="btn-secondary w-full"
+              >
+                <Calculator className="h-4 w-4 text-energia" />
+                Calcular economia
+              </button>
+              <a
+                href={buildWhatsAppUrl()}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-secondary w-full"
+              >
+                <MessageCircle className="h-4 w-4 text-sustentavel" />
+                Falar no WhatsApp
+              </a>
+            </div>
           </motion.div>
 
           <motion.div

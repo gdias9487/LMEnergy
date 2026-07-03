@@ -37,9 +37,8 @@ export function CTA() {
                 de luz?
               </h2>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-aco-400 sm:mt-5 sm:text-base">
-                Envie sua conta de luz e descubra em até 24h quanto você pode
-                economizar — seja com desconto direto na fatura ou com sistema
-                fotovoltaico próprio.
+                Responda algumas perguntas rápidas e receba em até 24h a melhor
+                solução — desconto na fatura, instalação solar ou manutenção.
               </p>
             </div>
 
@@ -58,7 +57,7 @@ export function CTA() {
                 onClick={openModal}
                 className="btn-secondary whitespace-nowrap"
               >
-                Enviar minha conta
+                Solicitar orçamento
               </button>
             </div>
           </div>

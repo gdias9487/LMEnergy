@@ -2,18 +2,20 @@
 
 import { motion } from "framer-motion";
 import { Github, Instagram, Zap } from "lucide-react";
+import { useSavingsCalculator } from "./SavingsCalculatorProvider";
 
 const links = {
   navegacao: [
     { label: "Início", href: "#hero" },
     { label: "Serviços", href: "#servicos" },
     { label: "Casos reais", href: "#projetos" },
+    { label: "Sobre", href: "#sobre" },
+    { label: "FAQ", href: "#faq" },
     { label: "Contato", href: "#contato" },
   ],
   recursos: [
-    { label: "Calculadora de economia", href: "#" },
-    { label: "Como funciona o desconto", href: "#" },
-    { label: "Perguntas frequentes", href: "#" },
+    { label: "Calculadora de economia", action: "calculator" as const },
+    { label: "Perguntas frequentes", href: "#faq" },
     { label: "Política de garantia", href: "#" },
   ],
 };
@@ -28,6 +30,8 @@ const socials = [
 ];
 
 export function Footer() {
+  const { openCalculator } = useSavingsCalculator();
+
   return (
     <footer className="relative border-t border-gelo/5 bg-petroleo-900/60">
       <div className="container-pad grid gap-12 py-16 lg:grid-cols-[1.6fr_1fr_1fr]">
@@ -71,7 +75,11 @@ export function Footer() {
         </motion.div>
 
         <FooterColumn title="Navegação" items={links.navegacao} />
-        <FooterColumn title="Recursos" items={links.recursos} />
+        <FooterColumn
+          title="Recursos"
+          items={links.recursos}
+          onCalculator={openCalculator}
+        />
       </div>
 
       <div className="border-t border-gelo/5">
@@ -90,12 +98,18 @@ export function Footer() {
   );
 }
 
+type FooterItem =
+  | { label: string; href: string; action?: never }
+  | { label: string; action: "calculator"; href?: never };
+
 function FooterColumn({
   title,
   items,
+  onCalculator,
 }: {
   title: string;
-  items: { label: string; href: string }[];
+  items: FooterItem[];
+  onCalculator?: () => void;
 }) {
   return (
     <motion.div
@@ -110,12 +124,22 @@ function FooterColumn({
       <ul className="mt-4 flex flex-col gap-3">
         {items.map((it) => (
           <li key={it.label}>
-            <a
-              href={it.href}
-              className="text-sm text-gelo/85 transition hover:text-energia"
-            >
-              {it.label}
-            </a>
+            {it.action === "calculator" ? (
+              <button
+                type="button"
+                onClick={onCalculator}
+                className="text-sm text-gelo/85 transition hover:text-energia"
+              >
+                {it.label}
+              </button>
+            ) : (
+              <a
+                href={it.href}
+                className="text-sm text-gelo/85 transition hover:text-energia"
+              >
+                {it.label}
+              </a>
+            )}
           </li>
         ))}
       </ul>
