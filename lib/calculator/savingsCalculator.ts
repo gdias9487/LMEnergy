@@ -18,7 +18,7 @@ const RATES: Record<
   SavingsSolution,
   { min: number; max: number; label: string }
 > = {
-  desconto: { min: 0.12, max: 0.2, label: "Desconto na conta" },
+  desconto: { min: 0.15, max: 0.2, label: "Desconto na conta" },
   instalacao: { min: 0.75, max: 0.92, label: "Instalação solar" },
 };
 

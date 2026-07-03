@@ -16,7 +16,7 @@ const items: StatItem[] = [
   { value: 50, suffix: "+", label: "Clientes atendidos" },
   { value: 4, unit: "anos", label: "No mercado solar" },
   { value: 9750, unit: "kWh/mês", label: "Gerados (em expansão)" },
-  { value: 20, suffix: "%", label: "Desconto na conta" },
+  { value: 15, suffix: "–20%", label: "Desconto na conta" },
 ];
 
 function Counter({

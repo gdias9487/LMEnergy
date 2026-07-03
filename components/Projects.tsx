@@ -25,7 +25,7 @@ const projects = [
     tag: "Desconto na conta",
     title: "Assinatura LM Solar",
     desc: "Programa de desconto sem investimento para quem mora de aluguel ou não pode instalar painéis.",
-    metric: "Até 20% off na fatura",
+    metric: "15% a 20% off na fatura",
     color: "from-energia/25 to-sustentavel/10",
     accent: "energia",
   },

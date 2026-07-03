@@ -15,7 +15,7 @@ const services = [
   {
     icon: PiggyBank,
     title: "Desconto na conta de luz",
-    desc: "Economize até 20% no boleto sem obra, sem investimento e sem multa de fidelidade.",
+    desc: "Economize de 15% a 20% no boleto sem obra, sem investimento e sem multa de fidelidade.",
     accent: "energia",
   },
   {

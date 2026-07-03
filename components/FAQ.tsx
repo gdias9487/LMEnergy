@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: "Quanto posso economizar por mês?",
-    a: "Depende do seu consumo, mas normalmente a economia fica entre 12% e 20% na fatura no modelo de desconto. Com sistema próprio, a redução pode chegar a mais de 90% da conta. No orçamento gratuito calculamos o valor exato para o seu caso.",
+    a: "Depende do seu consumo, mas normalmente a economia fica entre 15% e 20% na fatura no modelo de desconto. Com sistema próprio, a redução pode chegar a mais de 90% da conta. No orçamento gratuito calculamos o valor exato para o seu caso.",
   },
   {
     q: "Atende minha cidade?",
