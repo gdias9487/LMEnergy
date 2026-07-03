@@ -1,13 +1,15 @@
 "use client";
 
-import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useRef } from "react";
+import {
+  animate,
+  motion,
+  useInView,
+} from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 type StatItem = {
   value: number;
-  /** Sufixo curto, colado no número e na mesma fonte (ex.: "+", "%") */
   suffix?: string;
-  /** Unidade exibida em fonte menor ao lado do número (ex.: "kWh/mês", "anos") */
   unit?: string;
   label: string;
 };
@@ -27,29 +29,28 @@ function Counter({
   suffix?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-  const motionValue = useMotionValue(0);
-  const rounded = useTransform(motionValue, (v) => Math.round(v));
+  const inView = useInView(ref, { once: true, amount: 0.5, margin: "0px 0px -40px 0px" });
+  const [display, setDisplay] = useState(`0${suffix}`);
 
   useEffect(() => {
-    if (inView) {
-      const controls = animate(motionValue, to, {
-        duration: 1.6,
-        ease: [0.22, 1, 0.36, 1],
-      });
-      return controls.stop;
-    }
-  }, [inView, motionValue, to]);
+    if (!inView) return;
 
-  useEffect(() => {
-    return rounded.on("change", (v) => {
-      if (ref.current) {
-        ref.current.textContent = `${v.toLocaleString("pt-BR")}${suffix}`;
-      }
+    const controls = animate(0, to, {
+      duration: 1.6,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate(latest) {
+        setDisplay(`${Math.round(latest).toLocaleString("pt-BR")}${suffix}`);
+      },
     });
-  }, [rounded, suffix]);
 
-  return <span ref={ref}>0{suffix}</span>;
+    return () => controls.stop();
+  }, [inView, to, suffix]);
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      {display}
+    </span>
+  );
 }
 
 export function Stats() {
@@ -63,26 +64,34 @@ export function Stats() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-gelo/10 bg-gelo/10 shadow-card sm:rounded-3xl lg:grid-cols-4"
         >
-          {items.map((it, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-start gap-1.5 bg-grafite/80 p-4 backdrop-blur-xl sm:gap-2 sm:p-6 lg:p-7"
-            >
-              <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0 font-display font-bold leading-tight text-gelo">
-                <span className="text-2xl sm:text-3xl lg:text-4xl">
+          {items.map((it, i) => {
+            const isLargeNumber = it.value >= 1000;
+
+            return (
+              <div
+                key={i}
+                className="min-w-0 bg-grafite/80 p-4 backdrop-blur-xl sm:p-6 lg:p-7"
+              >
+                <div
+                  className={`font-display font-bold leading-none text-gelo ${
+                    isLargeNumber
+                      ? "text-xl sm:text-3xl lg:text-4xl"
+                      : "text-2xl sm:text-3xl lg:text-4xl"
+                  }`}
+                >
                   <Counter to={it.value} suffix={it.suffix} />
-                </span>
-                {it.unit && (
-                  <span className="text-xs font-medium text-aco-400 sm:text-sm lg:text-base">
-                    {it.unit}
-                  </span>
-                )}
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.16em] text-aco-500 sm:text-xs sm:tracking-[0.18em]">
-                {it.label}
-              </p>
-            </div>
-          ))}
+                  {it.unit && (
+                    <span className="mt-1 block text-[10px] font-medium leading-tight text-aco-400 sm:mt-0 sm:inline sm:text-sm lg:text-base">
+                      {it.unit}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 text-[10px] uppercase tracking-[0.14em] text-aco-500 sm:text-xs sm:tracking-[0.18em]">
+                  {it.label}
+                </p>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </section>
