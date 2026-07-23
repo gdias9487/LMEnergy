@@ -752,7 +752,7 @@ export function InstallationQuoteBuilder() {
         type="button"
         onClick={handleDownload}
         disabled={generating || !canDownload}
-        className="btn-primary group w-full disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+        className="btn-primary group w-full justify-center disabled:cursor-not-allowed disabled:opacity-70"
       >
         {generating ? (
           <>
