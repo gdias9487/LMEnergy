@@ -13,6 +13,7 @@ Feito pra ajudar famílias e empresas a **pagarem menos na conta de luz** — se
 - 👷 **Sobre o Leonardo** — a cara e a história por trás da LM Energy
 - ❓ **FAQ** — as dúvidas mais comuns respondidas
 - 📩 **Formulário de orçamento** que cai direto no e-mail + botão de WhatsApp
+- 📄 **Gerador secreto de PDF** (`/orcamento`) — propostas de instalação solar
 
 ## 🎨 Feito com
 
