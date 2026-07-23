@@ -1,5 +1,6 @@
 import {
   Document,
+  Image,
   Page,
   StyleSheet,
   Text,
@@ -92,8 +93,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grafite,
     borderRadius: 10,
     padding: 12,
-    borderWidth: 1,
-    borderColor: colors.line,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: colors.line,
+    borderRightColor: colors.line,
+    borderBottomColor: colors.line,
+    borderLeftColor: colors.line,
   },
   row: { flexDirection: "row", gap: 10 },
   col: { flex: 1 },
@@ -116,16 +123,28 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grafite,
     borderRadius: 10,
     padding: 10,
-    borderWidth: 1,
-    borderColor: colors.line,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: colors.line,
+    borderRightColor: colors.line,
+    borderBottomColor: colors.line,
+    borderLeftColor: colors.line,
   },
   highlightGreen: {
-    borderColor: "rgba(43,182,115,0.45)",
-    backgroundColor: "#0d2a22",
+    borderTopColor: colors.sustentavel,
+    borderRightColor: colors.sustentavel,
+    borderBottomColor: colors.sustentavel,
+    borderLeftColor: colors.sustentavel,
+    backgroundColor: colors.grafite,
   },
   highlightGold: {
-    borderColor: "rgba(244,178,35,0.45)",
-    backgroundColor: "#2a2210",
+    borderTopColor: colors.energia,
+    borderRightColor: colors.energia,
+    borderBottomColor: colors.energia,
+    borderLeftColor: colors.energia,
+    backgroundColor: colors.grafite,
   },
   highlightLabel: {
     fontSize: 7,
@@ -147,11 +166,86 @@ const styles = StyleSheet.create({
     lineHeight: 1.45,
     marginBottom: 4,
   },
-  table: {
-    borderWidth: 1,
-    borderColor: colors.line,
+  scopeGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 8,
+  },
+  scopeItem: {
+    width: "48.5%",
+    backgroundColor: colors.grafite,
     borderRadius: 10,
-    overflow: "hidden",
+    padding: 10,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: colors.line,
+    borderRightColor: colors.line,
+    borderBottomColor: colors.line,
+    borderLeftColor: colors.line,
+  },
+  scopeItemTitle: {
+    fontSize: 8,
+    fontFamily: "Helvetica-Bold",
+    color: colors.energia,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 4,
+  },
+  scopeItemValue: {
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: colors.gelo,
+    marginBottom: 3,
+  },
+  scopeItemDesc: {
+    fontSize: 8.5,
+    color: colors.aco,
+    lineHeight: 1.35,
+  },
+  metricsRow: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  metricCell: {
+    flex: 1,
+    backgroundColor: "#0a2030",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: colors.line,
+    borderRightColor: colors.line,
+    borderBottomColor: colors.line,
+    borderLeftColor: colors.line,
+  },
+  metricLabel: {
+    fontSize: 7,
+    color: colors.aco,
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+    marginBottom: 3,
+  },
+  metricValue: {
+    fontSize: 10,
+    fontFamily: "Helvetica-Bold",
+    color: colors.gelo,
+  },
+  table: {
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopColor: colors.line,
+    borderRightColor: colors.line,
+    borderBottomColor: colors.line,
+    borderLeftColor: colors.line,
+    borderRadius: 10,
   },
   tableRow: {
     flexDirection: "row",
@@ -176,6 +270,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: "Helvetica-Bold",
   },
+  tableCellLabelFirst: { borderTopLeftRadius: 9 },
+  tableCellValueFirst: { borderTopRightRadius: 9 },
+  tableCellLabelLast: { borderBottomLeftRadius: 9 },
+  tableCellValueLast: { borderBottomRightRadius: 9 },
+  sectionTitleGreen: {
+    color: colors.sustentavel,
+  },
   footer: {
     position: "absolute",
     left: 40,
@@ -199,12 +300,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Helvetica-Bold",
     color: colors.gelo,
+    textAlign: "center",
   },
   contact: {
     marginTop: 6,
     fontSize: 10,
     color: colors.aco,
     lineHeight: 1.5,
+    textAlign: "center",
+  },
+  imagePageTitle: {
+    fontSize: 13,
+    fontFamily: "Helvetica-Bold",
+    color: colors.energia,
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  imageSlots: {
+    flex: 1,
+    flexDirection: "column",
+    gap: 16,
+  },
+  imageSlot: {
+    flex: 1,
+    justifyContent: "flex-start",
+  },
+  imageWrap: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imagePhoto: {
+    width: "100%",
+    maxHeight: 300,
+    objectFit: "contain",
   },
 });
 
@@ -222,16 +351,37 @@ function Row({
   label,
   value,
   last,
+  first,
+  valueColor,
 }: {
   label: string;
   value?: string;
   last?: boolean;
+  first?: boolean;
+  valueColor?: string;
 }) {
   if (!value?.trim()) return null;
   return (
     <View style={[styles.tableRow, last ? styles.tableRowLast : {}]}>
-      <Text style={styles.tableCellLabel}>{label}</Text>
-      <Text style={styles.tableCellValue}>{value}</Text>
+      <Text
+        style={[
+          styles.tableCellLabel,
+          first ? styles.tableCellLabelFirst : {},
+          last ? styles.tableCellLabelLast : {},
+        ]}
+      >
+        {label}
+      </Text>
+      <Text
+        style={[
+          styles.tableCellValue,
+          first ? styles.tableCellValueFirst : {},
+          last ? styles.tableCellValueLast : {},
+          valueColor ? { color: valueColor } : {},
+        ]}
+      >
+        {value}
+      </Text>
     </View>
   );
 }
@@ -249,16 +399,44 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
   }
 
   const potenciaLabel = `${formatKwp(c.potenciaKwp)} kWp`;
-  const escopo = [
-    `Realizar a Instalação Fotovoltaica de um sistema de ${formatKwp(c.potenciaKwp)} kWp (${c.qtdModulos} módulos Canadian ${QUOTE_CALC.moduloWp} Wp) com ${QUOTE_CALC.garantiaModulosAnos} anos de garantia.`,
-    `Inversor solar fotovoltaico 1x Huawei ${c.inversorKw} kW AFCI (${QUOTE_CALC.garantiaInversorAnos} anos de garantia).`,
-    `Instalação com garantia de ${QUOTE_CALC.garantiaInstalacaoMeses} meses.`,
-    "Homologar o projeto junto à concessionária de energia ao final da instalação.",
+
+  const imagePages = (() => {
+    const valid = (quote.imagens ?? []).filter(
+      (img) => img.src && img.nome.trim(),
+    );
+    const pages: (typeof valid)[] = [];
+    for (let i = 0; i < valid.length; i += 2) {
+      pages.push(valid.slice(i, i + 2));
+    }
+    return pages;
+  })();
+
+  const scopeItems = [
+    {
+      title: "Módulos",
+      value: `${c.qtdModulos} × ${c.moduloLabel}`,
+      desc: `Sistema de ${formatKwp(c.potenciaKwp)} kWp com ${QUOTE_CALC.garantiaModulosAnos} anos de garantia de eficiência.`,
+    },
+    {
+      title: "Inversor",
+      value: c.inversor,
+      desc: `${QUOTE_CALC.garantiaInversorAnos} anos de garantia do equipamento.`,
+    },
+    {
+      title: "Instalação",
+      value: "Montagem completa",
+      desc: `Instalação elétrica em pleno funcionamento · garantia de ${QUOTE_CALC.garantiaInstalacaoMeses} meses.`,
+    },
+    {
+      title: "Homologação",
+      value: "Registro na Neoenergia",
+      desc: "Projeto homologado junto à concessionária ao final da instalação.",
+    },
   ];
 
   return (
     <Document
-      title={`Proposta ${quote.numero} — ${quote.clienteNome}`}
+      title={`Proposta — ${quote.clienteNome}`}
       author="LM Energy"
       subject={`Proposta comercial ${potenciaLabel}`}
     >
@@ -271,8 +449,8 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
             <Text style={styles.brandSub}>Proposta comercial · UFV</Text>
           </View>
           <View style={styles.meta}>
-            <Text style={styles.metaLabel}>Proposta nº</Text>
-            <Text style={styles.metaValue}>{quote.numero || "—"}</Text>
+            <Text style={styles.metaLabel}>Cliente</Text>
+            <Text style={styles.metaValue}>{quote.clienteNome || "—"}</Text>
             <Text style={[styles.metaLabel, { marginTop: 8 }]}>Data</Text>
             <Text style={styles.metaValue}>{quote.data || "—"}</Text>
             <Text style={[styles.metaLabel, { marginTop: 8 }]}>Validade</Text>
@@ -348,24 +526,42 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Escopo do projeto</Text>
-          <View style={styles.card}>
-            {escopo.map((line) => (
-              <Text key={line} style={styles.bullet}>
-                • {line}
-              </Text>
+
+          <View style={styles.scopeGrid}>
+            {scopeItems.map((item) => (
+              <View key={item.title} style={styles.scopeItem}>
+                <Text style={styles.scopeItemTitle}>{item.title}</Text>
+                <Text style={styles.scopeItemValue}>{item.value}</Text>
+                <Text style={styles.scopeItemDesc}>{item.desc}</Text>
+              </View>
             ))}
-            <Text style={styles.bullet}>
-              • Geração estimada de {formatKwh(c.geracaoMensalKwh)} kWh/mês
-            </Text>
-            <Text style={styles.bullet}>
-              • Geração estimada de {formatKwh(c.geracaoAnualKwh)} kWh/ano
-            </Text>
-            <Text style={styles.bullet}>
-              • Economia média mensal de {formatMoneyNumber(c.economiaMensal)}
-            </Text>
-            <Text style={styles.bullet}>
-              • Economia média anual de {formatMoneyNumber(c.economiaAnual)}
-            </Text>
+          </View>
+
+          <View style={styles.metricsRow}>
+            <View style={styles.metricCell}>
+              <Text style={styles.metricLabel}>Geração / mês</Text>
+              <Text style={styles.metricValue}>
+                {formatKwh(c.geracaoMensalKwh)} kWh
+              </Text>
+            </View>
+            <View style={styles.metricCell}>
+              <Text style={styles.metricLabel}>Geração / ano</Text>
+              <Text style={styles.metricValue}>
+                {formatKwh(c.geracaoAnualKwh)} kWh
+              </Text>
+            </View>
+            <View style={styles.metricCell}>
+              <Text style={styles.metricLabel}>Economia / mês</Text>
+              <Text style={[styles.metricValue, styles.green]}>
+                {formatMoneyNumber(c.economiaMensal)}
+              </Text>
+            </View>
+            <View style={styles.metricCell}>
+              <Text style={styles.metricLabel}>Economia / ano</Text>
+              <Text style={[styles.metricValue, styles.green]}>
+                {formatMoneyNumber(c.economiaAnual)}
+              </Text>
+            </View>
           </View>
         </View>
       </Page>
@@ -379,8 +575,10 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
             <Text style={styles.brandSub}>Investimento · Garantias</Text>
           </View>
           <View style={styles.meta}>
-            <Text style={styles.metaLabel}>Proposta nº</Text>
-            <Text style={styles.metaValue}>{quote.numero || "—"}</Text>
+            <Text style={styles.metaLabel}>Cliente</Text>
+            <Text style={styles.metaValue}>{quote.clienteNome || "—"}</Text>
+            <Text style={[styles.metaLabel, { marginTop: 8 }]}>Data</Text>
+            <Text style={styles.metaValue}>{quote.data || "—"}</Text>
           </View>
         </View>
 
@@ -388,39 +586,50 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
           <Text style={styles.sectionTitle}>Investimento</Text>
           <View style={styles.table}>
             <Row
+              first
               label="Equipamentos"
-              value={`${formatMoneyNumber(c.valorEquipamentos)} ou ${QUOTE_CALC.parcelasEquipamentos}x de ${formatMoneyNumber(c.valorParcelaEquipamentos)} (cartão)`}
+              value={`${formatMoneyNumber(c.valorEquipamentos)} ou ${c.qtdParcelas}x de ${formatMoneyNumber(c.valorParcelaEquipamentos)} (cartão)`}
+              valueColor={colors.energia}
             />
             <Row
               label="Engenharia"
               value={formatMoneyNumber(c.valorEngenharia)}
+              valueColor={colors.energia}
             />
             <Row
               label="Total"
               value={formatMoneyNumber(c.valorTotal)}
+              valueColor={colors.energia}
               last
             />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Retorno financeiro</Text>
+          <Text style={[styles.sectionTitle, styles.sectionTitleGreen]}>
+            Retorno financeiro
+          </Text>
           <View style={styles.table}>
             <Row
+              first
               label="Economia média mensal"
               value={formatMoneyNumber(c.economiaMensal)}
+              valueColor={colors.sustentavel}
             />
             <Row
               label="Economia média anual"
               value={formatMoneyNumber(c.economiaAnual)}
+              valueColor={colors.sustentavel}
             />
             <Row
               label="Economia em 25 anos"
               value={formatMoneyNumber(c.economia25Anos)}
+              valueColor={colors.sustentavel}
             />
             <Row
               label="Payback (retorno do investimento)"
               value={formatPaybackLabel(c.paybackAnos)}
+              valueColor={colors.sustentavel}
               last
             />
           </View>
@@ -430,6 +639,7 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
           <Text style={styles.sectionTitle}>Garantias</Text>
           <View style={styles.table}>
             <Row
+              first
               label="Inversor solar fotovoltaico"
               value={`Equipamento com ${QUOTE_CALC.garantiaInversorAnos} anos de garantia`}
             />
@@ -443,7 +653,7 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
             />
             <Row
               label="Registro na concessionária"
-              value="Projeto homologado e registrado pela Celpe"
+              value="Projeto homologado e registrado pela Neoenergia"
               last
             />
           </View>
@@ -455,24 +665,15 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
             <View style={styles.row}>
               <Info
                 label="Instalação"
-                value={`${QUOTE_CALC.prazoInstalacaoDias} dias`}
+                value={`${c.prazoObraDias} dias`}
               />
               <Info
-                label="Celpe"
-                value={`até ${QUOTE_CALC.prazoCelpeDias} dias`}
+                label="Neoenergia"
+                value={`até ${QUOTE_CALC.prazoNeoenergiaDias} dias`}
               />
             </View>
           </View>
         </View>
-
-        {quote.observacoes?.trim() ? (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Observações</Text>
-            <View style={styles.card}>
-              <Text style={styles.bullet}>{quote.observacoes.trim()}</Text>
-            </View>
-          </View>
-        ) : null}
 
         <Text style={styles.disclaimer}>
           Esta proposta possui validade de {QUOTE_CALC.validadeDias} dias
@@ -481,21 +682,55 @@ export function InstallationQuotePdf({ quote }: { quote: InstallationQuote }) {
           sujeitos a visita técnica e homologação na concessionária.
         </Text>
 
-        <Text style={styles.thanks}>Obrigado</Text>
+        <Text style={styles.thanks}>Obrigado!</Text>
         <Text style={styles.contact}>
-          Alguma dúvida?{"\n"}
+          Alguma dúvida? Entre em contato:{"\n"}
           msol.leonardo@outlook.com{"\n"}
-          CEO Leonardo: (81) 98168-4949{"\n"}
-          IG: lmenergy_of
+          (81) 98168-4949
         </Text>
 
         <View style={styles.footer} fixed>
           <Text style={styles.footerText}>
             LM Energy · Leonardo Mendes · Pernambuco
           </Text>
-          <Text style={styles.footerText}>WhatsApp (81) 98168-4949</Text>
         </View>
       </Page>
+
+      {imagePages.map((pair, pageIndex) => (
+        <Page key={`imgs-${pageIndex}`} size="A4" style={styles.page}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.brand}>
+                lm<Text style={styles.brandDot}>.</Text>energy
+              </Text>
+              <Text style={styles.brandSub}>Imagens</Text>
+            </View>
+            <View style={styles.meta}>
+              <Text style={styles.metaLabel}>Cliente</Text>
+              <Text style={styles.metaValue}>
+                {quote.clienteNome || "—"}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.imageSlots}>
+            {pair.map((img) => (
+              <View key={img.id} style={styles.imageSlot}>
+                <Text style={styles.imagePageTitle}>{img.nome.trim()}</Text>
+                <View style={styles.imageWrap}>
+                  <Image src={img.src} style={styles.imagePhoto} />
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.footer} fixed>
+            <Text style={styles.footerText}>
+              LM Energy · Leonardo Mendes · Pernambuco
+            </Text>
+          </View>
+        </Page>
+      ))}
     </Document>
   );
 }

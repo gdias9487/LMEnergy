@@ -10,15 +10,15 @@ export const QUOTE_CALC = {
   precoEngPorKwp: 955.83,
   /** Potência unitária dos módulos (Canadian) */
   moduloWp: 620,
-  /** Área aproximada ocupada por kWp */
-  areaM2PorKwp: 6.05,
+  /** Área de uma placa em m² (para cálculo de área do telhado) */
+  moduloAreaM2: 2.88,
   /** Parcelas no cartão para equipamentos */
   parcelasEquipamentos: 21,
   /** Markup total do parcelamento (ex.: 21x eleva o valor ~16,6%) */
   fatorParcelamento: 1.16614,
   validadeDias: 7,
   prazoInstalacaoDias: 7,
-  prazoCelpeDias: 90,
+  prazoNeoenergiaDias: 90,
   garantiaModulosAnos: 25,
   garantiaInversorAnos: 10,
   garantiaInstalacaoMeses: 12,
@@ -26,8 +26,15 @@ export const QUOTE_CALC = {
   inflacaoAnualEconomia: 0.0605,
 } as const;
 
+export type QuoteImage = {
+  id: string;
+  /** Nome / legenda da imagem */
+  nome: string;
+  /** Data URL (base64) da imagem */
+  src: string;
+};
+
 export type InstallationQuoteInput = {
-  numero: string;
   data: string;
   clienteNome: string;
   clienteCidade: string;
@@ -41,7 +48,28 @@ export type InstallationQuoteInput = {
    * Editável quando o cliente quiser gerar a mais.
    */
   potenciaKwp: string;
-  observacoes: string;
+  /** Override: quantidade de módulos (vazio = automático) */
+  qtdModulos: string;
+  /** Override: nome/modelo do módulo (vazio = automático) */
+  nomeModulo: string;
+  /** Override: potência do módulo em Wp (vazio = automático) */
+  potenciaModulo: string;
+  /** Override: quantidade de inversores (vazio = 1) */
+  qtdInversor: string;
+  /** Override: nome/modelo do inversor (vazio = automático) */
+  nomeInversor: string;
+  /** Override: potência do inversor em kW (vazio = automático) */
+  potenciaInversor: string;
+  /** Override: valor dos equipamentos (vazio = automático) */
+  valorEquipamentos: string;
+  /** Override: valor de engenharia (vazio = automático) */
+  valorEngenharia: string;
+  /** Override: prazo de obra em dias (vazio = padrão) */
+  prazoObra: string;
+  /** Override: quantidade de parcelas do equipamento (vazio = padrão) */
+  qtdParcelas: string;
+  /** Fotos opcionais — duas por página no PDF */
+  imagens: QuoteImage[];
 };
 
 export type InstallationQuoteComputed = {
@@ -49,14 +77,31 @@ export type InstallationQuoteComputed = {
   potenciaSugerida: number;
   potenciaEditada: boolean;
   qtdModulos: number;
+  qtdModulosSugerida: number;
+  nomeModulo: string;
+  nomeModuloSugerido: string;
+  potenciaModuloWp: number;
+  potenciaModuloSugerida: number;
+  /** Rótulo completo do módulo — ex.: Canadian 620 Wp */
+  moduloLabel: string;
+  qtdInversor: number;
+  nomeInversor: string;
+  nomeInversorSugerido: string;
+  potenciaInversorKw: number;
+  potenciaInversorSugerida: number;
+  /** Rótulo completo do inversor — ex.: 1× Huawei AFCI 4 kW */
+  inversor: string;
   geracaoMensalKwh: number;
   geracaoAnualKwh: number;
   areaM2: number;
-  inversorKw: number;
   valorEquipamentos: number;
+  valorEquipamentosSugerido: number;
   valorEngenharia: number;
+  valorEngenhariaSugerido: number;
   valorTotal: number;
+  qtdParcelas: number;
   valorParcelaEquipamentos: number;
+  prazoObraDias: number;
   economiaMensal: number;
   economiaAnual: number;
   economia25Anos: number;
@@ -69,7 +114,6 @@ export type InstallationQuote = InstallationQuoteInput & {
 };
 
 export const INITIAL_INSTALLATION_QUOTE: InstallationQuoteInput = {
-  numero: "",
   data: "",
   clienteNome: "",
   clienteCidade: "",
@@ -77,7 +121,17 @@ export const INITIAL_INSTALLATION_QUOTE: InstallationQuoteInput = {
   valorFatura: "",
   consumoKwh: "",
   potenciaKwp: "",
-  observacoes: "",
+  qtdModulos: "",
+  nomeModulo: "",
+  potenciaModulo: "",
+  qtdInversor: "",
+  nomeInversor: "",
+  potenciaInversor: "",
+  valorEquipamentos: "",
+  valorEngenharia: "",
+  prazoObra: "",
+  qtdParcelas: "",
+  imagens: [],
 };
 
 export function parseMoney(value: string): number {
@@ -139,13 +193,6 @@ export function formatQuoteDate(now = new Date()) {
   return now.toLocaleDateString("pt-BR");
 }
 
-/** Nº no formato da proposta de referência: 13/2026 */
-export function generateQuoteNumber(now = new Date()) {
-  const y = now.getFullYear();
-  const seq = String(now.getDate()).padStart(2, "0");
-  return `${seq}/${y}`;
-}
-
 /** Potência sugerida: valor_da_conta / 130 */
 export function suggestPotenciaKwp(valorFatura: string): number {
   const bill = parseMoney(valorFatura);
@@ -153,12 +200,49 @@ export function suggestPotenciaKwp(valorFatura: string): number {
   return bill / QUOTE_CALC.kwhPorKwpMes;
 }
 
-function pickInversorKw(potenciaKwp: number): number {
+export function suggestQtdModulos(
+  potenciaKwp: number,
+  moduloWp: number = QUOTE_CALC.moduloWp,
+): number {
+  if (potenciaKwp <= 0 || moduloWp <= 0) return 0;
+  return Math.max(1, Math.round((potenciaKwp * 1000) / moduloWp));
+}
+
+export function suggestNomeModulo(): string {
+  return "Canadian";
+}
+
+export function suggestPotenciaModuloWp(): number {
+  return QUOTE_CALC.moduloWp;
+}
+
+export function suggestInversorKw(potenciaKwp: number): number {
   if (potenciaKwp <= 0) return 0;
   const candidates = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 36, 40, 50];
   const target = potenciaKwp * 0.85;
-  const found = candidates.find((c) => c >= target - 0.15);
+  const found = candidates.find((kw) => kw >= target - 0.15);
   return found ?? Math.ceil(potenciaKwp);
+}
+
+export function suggestNomeInversor(): string {
+  return "Huawei AFCI";
+}
+
+export function suggestEquipamentos(potenciaKwp: number): number {
+  return potenciaKwp > 0 ? potenciaKwp * QUOTE_CALC.precoEquipPorKwp : 0;
+}
+
+export function suggestEngenharia(potenciaKwp: number): number {
+  return potenciaKwp > 0 ? potenciaKwp * QUOTE_CALC.precoEngPorKwp : 0;
+}
+
+/**
+ * Área aproximada = (m² da placa × qtd de placas) + 30%
+ */
+export function calcAreaM2(qtdModulos: number): number {
+  if (qtdModulos <= 0) return 0;
+  const base = QUOTE_CALC.moduloAreaM2 * qtdModulos;
+  return base * 1.3;
 }
 
 /** Soma futura com correção anual (projeção 25 anos). */
@@ -168,8 +252,15 @@ function projectedSavings(annual: number, years: number, rate: number) {
   return (annual * (Math.pow(1 + rate, years) - 1)) / rate;
 }
 
+export function resolvePotenciaKwp(input: InstallationQuoteInput): number {
+  const bill = parseMoney(input.valorFatura);
+  const potenciaSugerida = bill > 0 ? bill / QUOTE_CALC.kwhPorKwpMes : 0;
+  const potenciaManual = parseDecimal(input.potenciaKwp);
+  return potenciaManual > 0 ? potenciaManual : potenciaSugerida;
+}
+
 export function computeInstallationQuote(
-  input: Pick<InstallationQuoteInput, "valorFatura" | "potenciaKwp">,
+  input: InstallationQuoteInput,
 ): InstallationQuoteComputed | null {
   const bill = parseMoney(input.valorFatura);
   if (bill <= 0) return null;
@@ -184,8 +275,6 @@ export function computeInstallationQuote(
   const geracaoMensalKwh = potenciaKwp * QUOTE_CALC.kwhPorKwpMes;
   const geracaoAnualKwh = geracaoMensalKwh * 12;
 
-  // No modelo calibrado: 1 kWh ≈ R$ 1 quando o sistema é dimensionado por conta/130,
-  // com fator 0,96 de economia efetiva.
   const economiaMensal = geracaoMensalKwh * QUOTE_CALC.economiaFator;
   const economiaAnual = economiaMensal * 12;
   const economia25Anos = projectedSavings(
@@ -194,35 +283,95 @@ export function computeInstallationQuote(
     QUOTE_CALC.inflacaoAnualEconomia,
   );
 
-  const valorEquipamentos = potenciaKwp * QUOTE_CALC.precoEquipPorKwp;
-  const valorEngenharia = potenciaKwp * QUOTE_CALC.precoEngPorKwp;
-  const valorTotal = valorEquipamentos + valorEngenharia;
-  const valorParcelaEquipamentos =
-    (valorEquipamentos * QUOTE_CALC.fatorParcelamento) /
-    QUOTE_CALC.parcelasEquipamentos;
+  const nomeModuloSugerido = suggestNomeModulo();
+  const nomeModulo = input.nomeModulo.trim() || nomeModuloSugerido;
 
-  const qtdModulos = Math.max(
-    1,
-    Math.round((potenciaKwp * 1000) / QUOTE_CALC.moduloWp),
+  const potenciaModuloSugerida = suggestPotenciaModuloWp();
+  const potenciaModuloManual = Number(
+    input.potenciaModulo.replace(/\D/g, ""),
   );
-  const areaM2 = potenciaKwp * QUOTE_CALC.areaM2PorKwp;
-  const inversorKw = pickInversorKw(potenciaKwp);
-  const paybackAnos =
-    economiaAnual > 0 ? valorTotal / economiaAnual : 0;
+  const potenciaModuloWp =
+    potenciaModuloManual > 0 ? potenciaModuloManual : potenciaModuloSugerida;
+  const moduloLabel = `${nomeModulo} ${potenciaModuloWp} Wp`;
+
+  const qtdModulosSugerida = suggestQtdModulos(potenciaKwp, potenciaModuloWp);
+  const qtdModulosManual = Number(input.qtdModulos.replace(/\D/g, ""));
+  const qtdModulos =
+    qtdModulosManual > 0 ? qtdModulosManual : qtdModulosSugerida;
+
+  const qtdInversorManual = Number(input.qtdInversor.replace(/\D/g, ""));
+  const qtdInversor = qtdInversorManual > 0 ? qtdInversorManual : 1;
+
+  const nomeInversorSugerido = suggestNomeInversor();
+  const nomeInversor = input.nomeInversor.trim() || nomeInversorSugerido;
+
+  const potenciaInversorSugerida = suggestInversorKw(potenciaKwp);
+  const potenciaInversorManual = parseDecimal(input.potenciaInversor);
+  const potenciaInversorKw =
+    potenciaInversorManual > 0
+      ? potenciaInversorManual
+      : potenciaInversorSugerida;
+  const inversor = `${qtdInversor}× ${nomeInversor} ${potenciaInversorKw} kW`;
+
+  const valorEquipamentosSugerido = suggestEquipamentos(potenciaKwp);
+  const valorEngenhariaSugerido = suggestEngenharia(potenciaKwp);
+  const valorEquipamentos =
+    parseMoney(input.valorEquipamentos) > 0
+      ? parseMoney(input.valorEquipamentos)
+      : valorEquipamentosSugerido;
+  const valorEngenharia =
+    parseMoney(input.valorEngenharia) > 0
+      ? parseMoney(input.valorEngenharia)
+      : valorEngenhariaSugerido;
+
+  const valorTotal = valorEquipamentos + valorEngenharia;
+
+  const qtdParcelasManual = Number(input.qtdParcelas.replace(/\D/g, ""));
+  const qtdParcelas =
+    qtdParcelasManual > 0
+      ? qtdParcelasManual
+      : QUOTE_CALC.parcelasEquipamentos;
+
+  const valorParcelaEquipamentos =
+    (valorEquipamentos * QUOTE_CALC.fatorParcelamento) / qtdParcelas;
+
+  const prazoObraManual = Number(input.prazoObra.replace(/\D/g, ""));
+  const prazoObraDias =
+    prazoObraManual > 0
+      ? prazoObraManual
+      : QUOTE_CALC.prazoInstalacaoDias;
+
+  const areaM2 = calcAreaM2(qtdModulos);
+  const paybackAnos = economiaAnual > 0 ? valorTotal / economiaAnual : 0;
 
   return {
     potenciaKwp,
     potenciaSugerida,
     potenciaEditada,
     qtdModulos,
+    qtdModulosSugerida,
+    nomeModulo,
+    nomeModuloSugerido,
+    potenciaModuloWp,
+    potenciaModuloSugerida,
+    moduloLabel,
+    qtdInversor,
+    nomeInversor,
+    nomeInversorSugerido,
+    potenciaInversorKw,
+    potenciaInversorSugerida,
+    inversor,
     geracaoMensalKwh,
     geracaoAnualKwh,
     areaM2,
-    inversorKw,
     valorEquipamentos,
+    valorEquipamentosSugerido,
     valorEngenharia,
+    valorEngenhariaSugerido,
     valorTotal,
+    qtdParcelas,
     valorParcelaEquipamentos,
+    prazoObraDias,
     economiaMensal,
     economiaAnual,
     economia25Anos,
@@ -249,11 +398,11 @@ export function buildPdfFilename(quote: InstallationQuoteInput) {
       .replace(/[^a-zA-Z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
-  const num = quote.numero.replace("/", "-") || "rascunho";
   const nome = safe(quote.clienteNome) || "cliente";
   const cidade = safe(quote.clienteCidade) || "PE";
+  const data = safe(quote.data) || "rascunho";
 
-  return `M ${num} - ${nome} - ${cidade} - PE.pdf`;
+  return `${nome} - ${cidade} - PE - ${data}.pdf`;
 }
 
 export function formatPaybackLabel(years: number): string {
