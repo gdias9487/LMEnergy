@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useQuoteModal } from "./QuoteModalProvider";
 
@@ -40,15 +41,17 @@ export function Navbar() {
       <nav className="container-pad flex h-16 items-center justify-between sm:h-20">
         <a
           href="#hero"
-          className="flex items-center gap-2.5 text-gelo"
+          className="relative flex h-9 w-[165px] shrink-0 items-center sm:h-10 sm:w-[185px]"
           aria-label="LM Energy — voltar ao topo"
         >
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-energia to-energia-600 text-petroleo shadow-glow">
-            <Zap className="h-5 w-5" strokeWidth={2.5} />
-          </span>
-          <span className="font-display text-xl font-semibold tracking-tight">
-            lm<span className="text-energia">.</span>energy
-          </span>
+          <Image
+            src="/logolm_white.png"
+            alt="LM Energy"
+            fill
+            priority
+            className="object-contain object-left"
+            sizes="185px"
+          />
         </a>
 
         <ul className="hidden items-center gap-1 lg:flex">

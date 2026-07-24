@@ -228,6 +228,21 @@ export function suggestNomeInversor(): string {
   return "Huawei AFCI";
 }
 
+/** Marcas genéricas exibidas na proposta (sem modelo fixo). */
+export const QUOTE_EQUIPMENT_OPTIONS = {
+  modulos: ["Gokin", "DAH", "Trina", "DMEG", "Canadian"] as const,
+  inversores: [
+    "Solis",
+    "Sungrow",
+    "Livoltek",
+    "Canadian",
+    "Huawei",
+    "Solplanet",
+  ] as const,
+  disponibilidadeNote:
+    "Os módulos e inversores disponíveis dependerão da disponibilidade dos fornecedores.",
+} as const;
+
 export function suggestEquipamentos(potenciaKwp: number): number {
   return potenciaKwp > 0 ? potenciaKwp * QUOTE_CALC.precoEquipPorKwp : 0;
 }

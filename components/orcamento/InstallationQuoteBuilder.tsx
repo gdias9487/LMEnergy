@@ -6,12 +6,18 @@ import {
   FileText,
   ImagePlus,
   Loader2,
+  Moon,
+  Palette,
   RefreshCw,
   Sparkles,
+  Sun,
   Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { InstallationQuotePdf } from "@/components/orcamento/InstallationQuotePdf";
+import {
+  InstallationQuotePdf,
+  type PdfTheme,
+} from "@/components/orcamento/InstallationQuotePdf";
 import { CIDADES_PE } from "@/lib/quote/formConfig";
 import {
   INITIAL_INSTALLATION_QUOTE,
@@ -190,6 +196,21 @@ const EMPTY_OVERRIDES = {
   valorEngenharia: "",
 } as const;
 
+async function fetchLogoDataUrl(theme: PdfTheme): Promise<string> {
+  const path = theme === "light" ? "/logolm_blue.png" : "/logolm_white.png";
+  const res = await fetch(path);
+  if (!res.ok) {
+    throw new Error("Não foi possível carregar a logo da proposta.");
+  }
+  const blob = await res.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
 export function InstallationQuoteBuilder() {
   const [quote, setQuote] = useState<InstallationQuoteInput>(() => ({
     ...INITIAL_INSTALLATION_QUOTE,
@@ -197,6 +218,7 @@ export function InstallationQuoteBuilder() {
   }));
   const [generating, setGenerating] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [pdfTheme, setPdfTheme] = useState<PdfTheme>("dark");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const update = <K extends keyof InstallationQuoteInput>(
@@ -276,8 +298,13 @@ export function InstallationQuoteBuilder() {
     setGenerating(true);
     try {
       const fullQuote = buildQuoteForPdf(quote);
+      const logoSrc = await fetchLogoDataUrl(pdfTheme);
       const blob = await pdf(
-        <InstallationQuotePdf quote={fullQuote} />,
+        <InstallationQuotePdf
+          quote={fullQuote}
+          theme={pdfTheme}
+          logoSrc={logoSrc}
+        />,
       ).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -353,9 +380,6 @@ export function InstallationQuoteBuilder() {
     quote.qtdModulos ||
     (computed ? String(computed.qtdModulosSugerida) : "");
 
-  const nomeModuloExibido =
-    quote.nomeModulo || (computed ? computed.nomeModuloSugerido : "");
-
   const potenciaModuloExibida =
     quote.potenciaModulo ||
     (computed ? String(computed.potenciaModuloSugerida) : "");
@@ -363,10 +387,6 @@ export function InstallationQuoteBuilder() {
   const qtdInversorExibido =
     quote.qtdInversor ||
     (computed ? String(computed.qtdInversor) : "1");
-
-  const nomeInversorExibido =
-    quote.nomeInversor ||
-    (computed ? computed.nomeInversorSugerido : "");
 
   const potenciaInversorExibida =
     quote.potenciaInversor ||
@@ -495,13 +515,23 @@ export function InstallationQuoteBuilder() {
           Equipamentos e valores
         </h2>
         <p className="mb-4 text-xs text-aco-500">
-          Pré-preenchidos pelo cálculo da conta. Edite se precisar ajustar a
-          proposta.
+          Informe quantidade e potência. As marcas na proposta são genéricas —
+          o modelo final depende da disponibilidade dos fornecedores.
         </p>
+        <div className="mb-4 rounded-2xl border border-gelo/10 bg-petroleo-700/30 px-4 py-3 text-xs leading-relaxed text-aco-400">
+          <p>
+            <span className="font-medium text-gelo">Módulos:</span> Gokin, DAH,
+            Trina, DMEG, Canadian
+          </p>
+          <p className="mt-1">
+            <span className="font-medium text-gelo">Inversores:</span> Solis,
+            Sungrow, Livoltek, Canadian, Huawei, Solplanet
+          </p>
+        </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="grid grid-cols-[4.75rem_1fr_5.5rem] gap-3 sm:col-span-2">
+          <div className="grid grid-cols-2 gap-3">
             <Field
-              label="Qtd."
+              label="Qtd. de módulos"
               value={modulosExibidos}
               onChange={(v) =>
                 update("qtdModulos", v.replace(/\D/g, "").slice(0, 4))
@@ -510,13 +540,7 @@ export function InstallationQuoteBuilder() {
               inputMode="numeric"
             />
             <Field
-              label="Módulo"
-              value={nomeModuloExibido}
-              onChange={(v) => update("nomeModulo", v)}
-              placeholder="Canadian"
-            />
-            <Field
-              label="Potência (Wp)"
+              label="Potência do módulo (Wp)"
               value={potenciaModuloExibida}
               onChange={(v) => {
                 update("potenciaModulo", v.replace(/\D/g, "").slice(0, 4));
@@ -526,9 +550,9 @@ export function InstallationQuoteBuilder() {
               inputMode="numeric"
             />
           </div>
-          <div className="grid grid-cols-[4.75rem_1fr_5.5rem] gap-3 sm:col-span-2">
+          <div className="grid grid-cols-2 gap-3">
             <Field
-              label="Qtd."
+              label="Qtd. de inversores"
               value={qtdInversorExibido}
               onChange={(v) =>
                 update("qtdInversor", v.replace(/\D/g, "").slice(0, 2))
@@ -537,13 +561,7 @@ export function InstallationQuoteBuilder() {
               inputMode="numeric"
             />
             <Field
-              label="Inversor"
-              value={nomeInversorExibido}
-              onChange={(v) => update("nomeInversor", v)}
-              placeholder="Huawei AFCI"
-            />
-            <Field
-              label="Potência (kW)"
+              label="Potência do inversor (kW)"
               value={potenciaInversorExibida}
               onChange={(v) =>
                 update(
@@ -740,6 +758,51 @@ export function InstallationQuoteBuilder() {
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="rounded-3xl border border-gelo/10 bg-grafite-800/60 p-5 sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-wider text-energia">
+              <Palette className="h-3.5 w-3.5" />
+              Tema do PDF
+            </h2>
+            <p className="mt-1 text-xs text-aco-500">
+              Escolha o visual da proposta gerada.
+            </p>
+          </div>
+          <div
+            role="radiogroup"
+            aria-label="Tema do PDF"
+            className="inline-flex items-center gap-1 rounded-full border border-gelo/10 bg-petroleo-700/40 p-1"
+          >
+            {(
+              [
+                { id: "dark", label: "Dark", Icon: Moon },
+                { id: "light", label: "Light", Icon: Sun },
+              ] as const
+            ).map(({ id, label, Icon }) => {
+              const active = pdfTheme === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setPdfTheme(id)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                    active
+                      ? "bg-energia text-petroleo shadow-glow"
+                      : "text-aco-400 hover:text-gelo"
+                  }`}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       {erro && (

@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Instagram, Zap } from "lucide-react";
+import { Github, Instagram } from "lucide-react";
+import Image from "next/image";
 import { useSavingsCalculator } from "./SavingsCalculatorProvider";
 
 const links = {
@@ -41,13 +42,18 @@ export function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <a href="#hero" className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-energia to-energia-600 text-petroleo">
-              <Zap className="h-5 w-5" strokeWidth={2.5} />
-            </span>
-            <span className="font-display text-xl font-semibold tracking-tight text-gelo">
-              lm<span className="text-energia">.</span>energy
-            </span>
+          <a
+            href="#hero"
+            className="relative flex h-9 w-[165px] shrink-0 items-center sm:h-10 sm:w-[185px]"
+            aria-label="LM Energy — voltar ao topo"
+          >
+            <Image
+              src="/logolm_white.png"
+              alt="LM Energy"
+              fill
+              className="object-contain object-left"
+              sizes="185px"
+            />
           </a>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-aco-400">
             Leonardo Mendes — especialista em energia solar e soluções

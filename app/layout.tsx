@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     "Leonardo Mendes",
     "LM Energy",
   ],
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
